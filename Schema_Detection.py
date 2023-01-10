@@ -1,9 +1,16 @@
 import sqlizer
 import os
-import sys
 
 
-def file_to_sql(file_type, file_path, table_name, database_type):
+def schema_detection(file_type, file_path, table_name, database_type):
+    """
+    This function is used for detecting the source schema and generating target DDL(schema detection)
+    parameters :
+    1. file_type : type of the input source file
+    2. file_path : absolute location path of the source file
+    3. table_name : expected name of the target table
+    4. database_type : target database system
+    """
     with open(file_path, mode='rb') as file_content:
         converter = sqlizer.File(file_content, database_type, file_type, file_path, table_name)
         converter.convert(wait=True)
@@ -12,8 +19,10 @@ def file_to_sql(file_type, file_path, table_name, database_type):
 
 
 if __name__ == '__main__':
-
-    while (True):
+    """ 
+    Accepting input parameters and calling the schema_detection function
+    """
+    while True:
         fileType = input('Enter file type from the following: '
                          'xlsx, xls, csv, txt, xml, json \n').lower()
 
@@ -23,7 +32,7 @@ if __name__ == '__main__':
         else:
             break
 
-    while (True):
+    while True:
         filePath = input('Enter File Path without the filename: ')
 
         os.chdir(filePath)
@@ -41,6 +50,6 @@ if __name__ == '__main__':
 
     abs_file_path = os.path.abspath(filePath + '/' + fileName)
     tableName = input('Enter DDL Table name: ').upper()
-    databaseType = 'MySQL'
+    databaseType = 'SQLServer'
 
-    file_to_sql(fileType, abs_file_path, tableName, databaseType)
+    schema_detection(fileType, abs_file_path, tableName, databaseType)
